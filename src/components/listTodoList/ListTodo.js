@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ListToList from "../components/ListToList";
+import ListToList from "./listToListHijos/ListToList";
 
 const ListTodo = () => {
   const [nombreLista, setNombreLista] = useState("");
@@ -10,7 +10,6 @@ const ListTodo = () => {
   };
 
   const crearLista = (event) => {
-    
     const request = {
       name: nombreLista,
       id: null,
@@ -22,7 +21,7 @@ const ListTodo = () => {
       request.name === null ||
       request.name === ""
     ) {
-        event.preventDefault();
+      event.preventDefault();
       console.log("Debes ingresar un nombre");
     } else {
       fetch("http://localhost:8080/api/list/listtodo", {
@@ -43,22 +42,21 @@ const ListTodo = () => {
 
   return (
     <>
-      <form id="myform">
-        <input
-          id="nombrelista"
-          placeholder="Ingresar nombre lista"
-          onChange={handleSubmitNombreLista}
-        />
-        <button id="btnlista" onClick={crearLista}>
-          Crear
-        </button>
-      </form>
-
-      <ListToList/>
+      <div className="divcrearlista">
+        <form id="myform">
+          <input
+            id="nombrelista"
+            placeholder="Ingresar nombre lista"
+            onChange={handleSubmitNombreLista}
+          />
+          <button id="btnlista" onClick={crearLista}>
+            Crear
+          </button>
+        </form>
+      </div>
+      <ListToList />
     </>
   );
 };
-
-
 
 export default ListTodo;

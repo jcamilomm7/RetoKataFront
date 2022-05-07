@@ -1,23 +1,19 @@
-import React from "react";
+import "./scss/app.scss";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import routes from "./config/routes"
-const App = () => {
+import rutas from "./config/rutas";
+
+function App() {
   return (
-    <div className="App">
+    <>
       <Router>
         <Routes>
-          {routes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.patch}
-              element={<route.component />}
-            />
+          {rutas.map((ruta, index) => (
+            <Route key={index} path={ruta.patch} element={<ruta.component />} />
           ))}
         </Routes>
       </Router>
-    </div>
+    </>
   );
-};
+}
 
 export default App;
-
