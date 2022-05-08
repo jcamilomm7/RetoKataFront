@@ -10,13 +10,13 @@ export const initialState = {
 };
 export const Store = createContext(initialState);
 
-function App() {
+function Todo() {
   return (
     <StoreProvider>
       <div className="containerform ">
         <div className="row">
           <div className="col-sm-12 col-md-6 divimggif">
-            <img  src={video} />
+            <img src={video} />
           </div>
           <div className="col-sm-12 col-md-6">
             <h3>To-Do List</h3>
@@ -29,4 +29,4 @@ function App() {
   );
 }
 
-export default App;
+export default Todo;

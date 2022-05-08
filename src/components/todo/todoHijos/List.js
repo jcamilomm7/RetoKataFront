@@ -1,5 +1,8 @@
 import React, { useContext, useEffect } from "react";
-import { HOST_API } from "../../../api/config/config.js";
+import imgEditar from "../../../image/png/editar.png";
+import imgEliminar from "../../../image/png/expediente.png";
+
+const HOST_API = "http://localhost:8080/api";
 const List = (props) => {
   let Store = props.Store;
   const {
@@ -53,12 +56,18 @@ const List = (props) => {
   };
   return (
     <div>
-      <table className="tabletodo">
+      <table className="table table-success table-striped tabletodo">
         <thead>
           <tr>
             <td>ID</td>
             <td>Tarea</td>
             <td>¿Completado?</td>
+            <td>
+              <img src={imgEditar} className="imgeditar" />
+            </td>
+            <td>
+              <img src={imgEliminar} className="imgeditar" />
+            </td>
           </tr>
         </thead>
         <tbody>
@@ -75,10 +84,20 @@ const List = (props) => {
                   ></input>
                 </td>
                 <td>
-                  <button onClick={() => onDelete(todo.id)}>Eliminar</button>
+                  <button
+                    className="btneditartarea"
+                    onClick={() => onEdit(todo)}
+                  >
+                    Editar
+                  </button>
                 </td>
                 <td>
-                  <button onClick={() => onEdit(todo)}>Editar</button>
+                  <button
+                    className="btneliminartarea"
+                    onClick={() => onDelete(todo.id)}
+                  >
+                    Eliminar
+                  </button>
                 </td>
               </tr>
             );

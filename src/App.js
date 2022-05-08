@@ -5,6 +5,7 @@ import rutas from "./config/rutas";
 function App() {
   return (
     <>
+      {/* Gracias a react router dom podemos empaquetar las rutas y asi queda mucho mas profesional */}
       <Router>
         <Routes>
           {rutas.map((ruta, index) => (

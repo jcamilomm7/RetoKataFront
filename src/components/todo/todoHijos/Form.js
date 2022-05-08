@@ -1,5 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
-import { HOST_API } from "../../../api/config/config.js";
+
+const HOST_API = "http://localhost:8080/api";
 
 const Form = (props) => {
   let Store = props.Store;
@@ -68,10 +69,10 @@ const Form = (props) => {
   };
 
   return (
-    <div >
-      <form ref={formRef} >
+    <div>
+      <form ref={formRef}>
         <input
-        className="formtodo"
+          className="formtodo"
           type="text"
           name="name"
           placeholder="¿Qué piensas hacer hoy?"
@@ -80,8 +81,16 @@ const Form = (props) => {
             setState({ ...state, name: event.target.value });
           }}
         ></input>
-        {item.id && <button onClick={onEdit}>Actualizar</button>}
-        {!item.id && <button onClick={onAdd}>Crear</button>}
+        {item.id && (
+          <button className="btntodocrear" onClick={onEdit}>
+            Actualizar
+          </button>
+        )}
+        {!item.id && (
+          <button className="btntodocrear" onClick={onAdd}>
+            Crear
+          </button>
+        )}
       </form>
     </div>
   );

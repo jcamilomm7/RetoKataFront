@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+//Se importan los componentes a utilizar aca en el componente padre de la aplicacion
 import ListTodo from "../components/listTodoList/ListTodo";
-import Titulo from "../components/Titulo";
 import Todo from "../components/todo/Todo";
+import Titulo from "../components/Titulo";
+
 
 const AppKata = () => {
   const [btnTodo, setbtnTodo] = useState(false);
@@ -50,7 +52,7 @@ const AppKata = () => {
         </div>
       </div>
       {btnTodo ? <Todo /> : <></>}
-      {btnListToList ? <ListTodo/> : <></>}
+      {btnListToList ? <ListTodo /> : <></>}
     </>
   );
 };

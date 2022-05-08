@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+//gracias a la dependencia reactstrap podemos crear los modales de uan forma facil
 import {
   Button,
   Modal,
@@ -7,7 +8,92 @@ import {
   ModalFooter,
   FormGroup,
 } from "reactstrap";
+//Iconos para los btn de eliminar y editar
+import imgEditar from "../../../image/png/editar.png";
+import imgEliminar from "../../../image/png/expediente.png";
+//Funciones del consumo de apis
+import {
+  encontrarTareasApi,
+  editarTareaApi,
+  eliminarTareaApi,
+  crearTareaApi,
+} from "../../../api/apiTareas";
+import { encontrarListasApi, eliminarlistaApi } from "../../../api/apilistas";
+
 const ListToList = () => {
+  //Se actualiza la tarea
+  const editar = () => {
+    editarTareaApi(tareaSeleccionada);
+    setModalEditar(false);
+    window.location.reload();
+  };
+
+  //Traer las tareas de la base de datos
+  const [listaTareas, setlistaTareas] = useState([]);
+  const [nombreTarea, setNombreTarea] = useState("");
+  useEffect(() => {
+    encontrarTareasApi(setlistaTareas);
+  }, [encontrarTareasApi]);
+
+  //Traer las listas de la base de datos
+  const [listas, setlistas] = useState([]);
+  useEffect(() => {
+    encontrarListasApi(setlistas);
+  }, [encontrarListasApi]);
+
+  //Crear tarea
+  const crearTarea = (id, nombreLista) => {
+    /* event.preventDefault(); */
+    const request = {
+      name: nombreTarea,
+      id: null,
+      completed: false,
+      listTodo: {
+        id: id,
+        name: nombreLista,
+      },
+    };
+
+    if (
+      request.name === undefined ||
+      request.name === null ||
+      request.name === ""
+    ) {
+      console.log("Debes ingresar un nombre");
+    } else {
+      crearTareaApi(request);
+    }
+    const myformtarea = document.querySelector("#myformtarea");
+    myformtarea.reset();
+  };
+
+  //Eliminar lista
+  const eliminarLista = (id) => {
+    eliminarlistaApi(id);
+    window.location.reload();
+  };
+
+  //Eliminar tarea
+  const eliminar = (id) => {
+    eliminarTareaApi(id);
+    window.location.reload();
+  };
+
+  //Actualizar tarea
+  const onChange = (event, tarea, id, nombreLista) => {
+    const request = {
+      name: tarea.name,
+      id: tarea.id,
+      completed: event.target.checked,
+      listTodo: {
+        id: id,
+        name: nombreLista,
+      },
+    };
+    editarTareaApi(request);
+    window.location.reload();
+  };
+
   //Estados para los modales
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
@@ -27,6 +113,7 @@ const ListToList = () => {
     caso === "Editar" ? setModalEditar(true) : setModalEliminar(true);
   };
 
+  //handle para el modal de editar
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTareaSeleccionada((prevState) => ({
@@ -34,127 +121,17 @@ const ListToList = () => {
       [name]: value,
     }));
   };
-  //Se actualiza la tarea
-  const editar = () => {
-    fetch("http://localhost:8080/api/todo", {
-      method: "PUT",
-      body: JSON.stringify(tareaSeleccionada),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((todo) => {});
-    setModalEditar(false);
-    window.location.reload();
-  };
 
-  //Traer las tareas de la base de datos
-  const [listaTareas, setlistaTareas] = useState([]);
-  const [nombreTarea, setNombreTarea] = useState("");
-  useEffect(() => {
-    fetch("http://localhost:8080/api/todos")
-      .then((response) => response.json())
-      .then((list) => {
-        setlistaTareas(list);
-      });
-  }, []);
-
-  //Traer las listas de la base de datos
-  const [listas, setlistas] = useState([]);
-  useEffect(() => {
-    fetch("http://localhost:8080/api/list/listtodos")
-      .then((response) => response.json())
-      .then((list) => {
-        setlistas(list);
-      });
-  }, []);
-
-  //hundle tarea
+  //handle tarea
   const handleSubmitNombreTarea = (e) => {
     setNombreTarea(e.target.value);
-  };
-
-  //Crear tarea
-  const crearTarea = (id, nombreLista) => {
-    /* event.preventDefault(); */
-    const request = {
-      name: nombreTarea,
-      id: null,
-      completed: false,
-      listTodo: {
-        id: id,
-        name: nombreLista,
-      },
-    };
-    console.log(typeof request.name);
-
-    if (
-      request.name === undefined ||
-      request.name === null ||
-      request.name === ""
-    ) {
-      console.log("Debes ingresar un nombre");
-    } else {
-      fetch("http://localhost:8080/api/todo", {
-        method: "POST",
-        body: JSON.stringify(request),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((todo) => {});
-    }
-    const myformtarea = document.querySelector("#myformtarea");
-    myformtarea.reset();
-  };
-
-  //Eliminar lista
-  const eliminarLista = (id) => {
-    fetch(`http://localhost:8080/api/list/${id}`, {
-      method: "DELETE",
-    }).then((list) => {});
-    window.location.reload();
-  };
-  console.log(listaTareas);
-  console.log(listas);
-
-  //Eliminar tarea
-  const eliminar = (id) => {
-    fetch(`http://localhost:8080/api/${id}/todo`, {
-      method: "DELETE",
-    }).then((list) => {});
-    window.location.reload();
-  };
-
-  //Actualizar tarea
-  const onChange = (event, tarea, id, nombreLista) => {
-    const request = {
-      name: tarea.name,
-      id: tarea.id,
-      completed: event.target.checked,
-      listTodo: {
-        id: id,
-        name: nombreLista,
-      },
-    };
-
-    fetch("http://localhost:8080/api/todo", {
-      method: "PUT",
-      body: JSON.stringify(request),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((todo) => {});
-    window.location.reload();
   };
 
   return (
     <>
       <div className="containerlistasren">
+        {/* la logica es recorrer primero el array de objetos de las listas y luego el
+         array de tareas y filtrar las tareas correspondiente a la lista de la posicion de la iteracion*/}
         <div className="row">
           {listas.map((lista, index) => {
             return (
@@ -163,11 +140,14 @@ const ListToList = () => {
                   <div className="row">
                     <div className="col-12">
                       <h1 className="titulolista">{lista.name}</h1>
-                      <button className="btneliminarlista" onClick={() => eliminarLista(lista.id)}>
+                      <button
+                        className="btneliminarlista"
+                        onClick={() => eliminarLista(lista.id)}
+                      >
                         Eliminar lista
                       </button>
                     </div>
-                    
+
                     <div className="col-12 divformtareas">
                       <form id="myformlista">
                         <input
@@ -176,7 +156,7 @@ const ListToList = () => {
                           onChange={handleSubmitNombreTarea}
                         />
                         <button
-                        className="btncreartarea"
+                          className="btncreartarea"
                           id="btntarea"
                           onClick={() => crearTarea(lista.id, lista.name)}
                         >
@@ -185,12 +165,18 @@ const ListToList = () => {
                       </form>
                     </div>
                     <div className="col-12">
-                      <table className="table table-striped tabletareas" >
+                      <table className="table table-striped tabletareas">
                         <thead>
                           <tr>
                             <td>ID</td>
                             <td>Tarea</td>
                             <td>¿Completado?</td>
+                            <td>
+                              <img src={imgEditar} className="imgeditar" />
+                            </td>
+                            <td>
+                              <img src={imgEliminar} className="imgeditar" />
+                            </td>
                           </tr>
                         </thead>
                         <tbody>
@@ -214,15 +200,17 @@ const ListToList = () => {
 
                                   <td>
                                     <button
-                                    className="btneditartarea"
+                                      className="btneditartarea"
                                       onClick={() =>
                                         seleccionarTarea(tarea, "Editar")
                                       }
                                     >
                                       Editar
                                     </button>
+                                  </td>
+                                  <td>
                                     <button
-                                    className="btneliminartarea"
+                                      className="btneliminartarea"
                                       onClick={() =>
                                         seleccionarTarea(tarea, "Eliminar")
                                       }
@@ -242,6 +230,7 @@ const ListToList = () => {
               </div>
             );
           })}
+          {/* Se implementa el modal para editar las tareas */}
           <Modal isOpen={modalEditar}>
             <ModalHeader>
               <div>
@@ -317,6 +306,7 @@ const ListToList = () => {
               </Button>
             </ModalFooter>
           </Modal>
+          {/* Se implementa el modal para eliminar las tareas */}
 
           <Modal isOpen={modalEliminar}>
             <ModalHeader>

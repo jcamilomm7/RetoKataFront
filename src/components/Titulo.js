@@ -1,5 +1,8 @@
 import React from "react";
+//Se importan imagenes a utilizar en el componente
 import logoSofka from "../image/png/logo-sofkau.webp";
+import todoList from "../image/gif/todo-list-kata.gif";
+
 const Titulo = () => {
   return (
     <div className="container">
@@ -14,6 +17,9 @@ const Titulo = () => {
         </div>
         <div className="col-md-4 contenedorimg">
           <img src={logoSofka} />
+        </div>
+        <div className="col-md-12">
+          <img src={todoList} className="imgtodolist" />
         </div>
       </div>
     </div>
