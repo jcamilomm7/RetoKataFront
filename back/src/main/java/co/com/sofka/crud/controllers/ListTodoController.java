@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/list")
+
+//@RequestMapping("/api/list")
 
 public class ListTodoController {
     @Autowired
